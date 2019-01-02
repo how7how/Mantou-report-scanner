@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[11]:
+
+
+#!pip install baidu-aip
+
+
+# In[3]:
+
+
+from aip import AipOcr
+import pandas as pd
+""" 你的 APPID AK SK """
+APP_ID = '15244201'
+API_KEY = 'hfO81lm73WrNwTwzdvqpSCs4'
+SECRET_KEY = 'txpTqC34USclcjXGY3ehOgeto0FlsBGr'
+
+client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
+
+
+# In[42]:
+
+
+inputFname='timg.jpeg'
+options = {}
+options["recognize_granularity"] = "big"
+options["language_type"] = "CHN"
+options["detect_direction"] = "true"
+options["detect_language"] = "true"
+options["vertexes_location"] = "true"
+options["probability"] = "true"
+options["result_type"] = "json"
+
+
+# In[47]:
+
+
+def get_file_content(filePath):
+    with open(filePath, 'rb') as fp:
+        return fp.read()
+
+image = get_file_content(inputFname)
+
+""" 调用通用文字识别, 图片参数为本地图片 """
+outPut=client.basicGeneral(image,options);
+
+
+# In[52]:
+
+
+outPut=client.receipt(image);
+
+
+# In[77]:
+
+
+words=pd.DataFrame(outPut['words_result'])['words'].values
+
+
+# In[79]:
+
+
+tmpDf=pd.DataFrame(outPut['words_result'])['location'].apply(pd.Series)
+
+
+# In[80]:
+
+
+tmpDf['words']=words
+
+
+# In[82]:
+
+
+get_ipython().system('pip install plotly')
+
+
+# In[ ]:
+
+
+
+

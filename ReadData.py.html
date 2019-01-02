@@ -1,0 +1,201 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[37]:
+
+
+import pandas as pd
+
+
+# 
+
+# In[38]:
+
+
+#from google.colab import drive
+#drive.mount('/content/gdrive')
+
+
+# In[39]:
+
+
+import os
+#os.listdir('./gdrive/My Drive/Colab Notebooks/')
+
+
+# In[40]:
+
+
+tmpDf=pd.read_csv('final2.csv')
+
+
+# In[41]:
+
+
+#import matplotlib.pyplot as plt
+
+
+# In[42]:
+
+
+#fig,ax=plt.subplots()#
+#ax.scatter(x=tmpDf['x'],y=tmpDf['y'])
+#for _,tmpS in tmpDf.iterrows():
+  #print (tmpS['y'], tmpS['x'])
+#ax.axhline (y=tmpS['y'],xmin=tmpS['x'],xmax=tmpS['x']+tmpS['width'] ,linewidth=4) 
+#ax.axhline(y=0.5)
+
+
+# In[43]:
+
+
+#tmpS['x']+tmpS['width']
+
+
+# In[44]:
+
+
+tmpDf['x_normed']=tmpDf['x']/tmpDf['x'].max()
+tmpDf['width_normed']=tmpDf['width']/tmpDf['x'].max()
+
+tmpDf['y_normed']=1- tmpDf['y']/tmpDf['y'].max()
+
+
+# 
+
+# In[45]:
+
+
+#tmpS
+
+
+# In[46]:
+
+
+"""
+fig,ax=plt.subplots()#d
+#ax.scatter(x=tmpDf['x'],y=tmpDf['y'])
+for _,tmpS in tmpDf.iterrows():
+  #print (tmpS['y'], tmpS['x'],tmpS['x']+tmpS['width'])
+  ax.axhline (y=tmpS['y_normed'],xmin=tmpS['x_normed'],xmax=tmpS['x_normed']+tmpS['width_normed'] ,linewidth=4) 
+  #ax.annotate(xy=(tmpS['y_normed'],tmpS['x_normed']),s=tmpS['itemstring'])
+#
+"""
+
+
+# In[47]:
+
+
+#tmpDf
+
+
+# In[48]:
+
+
+"""
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import plotly.graph_objs as go
+def configure_plotly_browser_state():
+  import IPython
+  display(IPython.core.display.HTML('''
+        <script src="/static/components/requirejs/require.js"></script>
+        <script>
+          requirejs.config({
+            paths: {
+              base: '/static/base',
+              plotly: 'https://cdn.plot.ly/plotly-latest.min.js?noext',
+            },
+          });
+        </script>
+        '''))
+
+#init_notebook_mode()
+
+trace = go.Scatter(
+    x = tmpDf['x_normed'],
+    y = tmpDf['y_normed'],
+    text=tmpDf['itemstring'],
+    mode = 'markers+text'
+)
+data=[trace]
+
+configure_plotly_browser_state()
+
+iplot(data)
+"""
+
+queryString="结果"
+anchorTmpS=tmpDf[tmpDf['itemstring']==queryString].iloc[0]
+
+
+# In[49]:
+
+
+anchorTmpS.loc['x_normed'],anchorTmpS.loc['y_normed']
+
+
+# In[50]:
+
+
+m_y=tmpDf['y_normed']<anchorTmpS.loc['y_normed']
+m_x=(tmpDf['x_normed']-anchorTmpS.loc['x_normed']).abs()<0.1
+valColS=tmpDf[m_y&m_x]['itemstring']
+
+
+# In[51]:
+
+
+m_y=tmpDf['y_normed']<anchorTmpS.loc['y_normed']
+m_x=(tmpDf['x_normed']-anchorTmpS.loc['x_normed'])<-0.2
+entryColS=tmpDf[m_y&m_x]['itemstring']
+
+
+# 
+
+# In[52]:
+
+
+outputDf=pd.DataFrame({'entryColS':entryColS[entryColS.str.contains('[\u4e00-\u9fff]')].values[:len(valColS)],'valColS':valColS.values})
+
+
+# In[53]:
+
+
+outputDf
+
+
+# In[54]:
+
+
+#outputDf
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
